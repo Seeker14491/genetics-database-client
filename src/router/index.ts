@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Query from '../views/Query.vue';
-import QueryResults from '../views/QueryResults.vue';
+import Query from "@/views/Query.vue";
+import QueryResults from "@/views/QueryResults.vue";
 
 Vue.use(VueRouter);
 

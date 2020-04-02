@@ -3,7 +3,7 @@
     <v-card-title>Add Filter</v-card-title>
 
     <v-card-text>
-      <v-select v-model="table" label="Table" :items="store.tables" @input="column = null" />
+      <v-select v-model="table" label="Table" :items="$store.state.tables" @input="column = null" />
 
       <div v-if="table">
         <v-select v-model="column" label="Column" :items="schema.columnNames" />
@@ -15,7 +15,7 @@
         <div v-else-if="integer">
           <div>integer</div>
 
-          <QueryListFilterAdderNumberChooser v-model="comparisonChoice" />
+          <QueryListFilterAdderNumberChooser />
         </div>
 
         <div v-else-if="real">
@@ -44,25 +44,25 @@
   </v-card>
 </template>
 
-<script>
-import QueryListFilterAdderNumberChooser from './QueryListFilterAdderNumberChooser.vue';
+<script lang="ts">
+import Vue from 'vue';
+import QueryListFilterAdderNumberChooser from './QueryListAddFilterNumber.vue';
 
-export default {
-  name: 'QueryListFilterAdder',
+export default Vue.extend({
+  name: 'QueryListAddFilter',
   components: { QueryListFilterAdderNumberChooser },
   data: () => ({
     table: null,
     column: null,
     booleanCheckbox: false,
-    comparisonChoice: '=',
   }),
 
   computed: {
-    schema() {
-      return this.store.schema.get(this.table);
+    schema(): TableSchema {
+      return this.$store.state.schema.get(this.table);
     },
 
-    columnType() {
+    columnType(): string {
       const i = this.schema.columnNames.findIndex((x) => x === this.column);
       if (i === -1) {
         throw new Error('specified column not found');
@@ -71,27 +71,27 @@ export default {
       return this.schema.columnTypes[i];
     },
 
-    boolean() {
+    boolean(): boolean {
       return this.columnType === 'boolean';
     },
 
-    integer() {
+    integer(): boolean {
       return ['smallint', 'integer', 'bigint'].includes(this.columnType);
     },
 
-    real() {
+    real(): boolean {
       return this.columnType === 'real';
     },
 
-    text() {
+    text(): boolean {
       return this.columnType === 'text';
     },
 
-    char() {
+    char(): boolean {
       return this.columnType === 'char';
     },
 
-    date() {
+    date(): boolean {
       return this.columnType === 'date';
     },
   },
@@ -113,5 +113,5 @@ export default {
       this.$emit('add-filter', { table: this.table, column: this.column, ...extraData });
     },
   },
-};
+});
 </script>

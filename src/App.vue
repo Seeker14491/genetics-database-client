@@ -22,13 +22,14 @@
   </v-app>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import axios from 'axios';
 import TheNavBar from './components/TheNavBar.vue';
 
 const backendUrl = 'https://genetics-database.herokuapp.com';
 
-export default {
+export default Vue.extend({
   name: 'App',
 
   components: {
@@ -41,7 +42,7 @@ export default {
 
   async created() {
     try {
-      const requests = this.store.tables.map(async (table) => {
+      const requests = this.$store.state.tables.map(async (table: string) => {
         const { data } = await axios.get(
           `${backendUrl}/api/raw-query?query=SELECT * FROM ${table} LIMIT 0`,
         );
@@ -51,15 +52,15 @@ export default {
         }];
       });
 
-      const responses = await Promise.all(requests);
+      const responses: [string, object][] = await Promise.all(requests);
       const schema = new Map(responses);
 
-      this.store.setSchemaAction(schema);
+      this.$store.commit('setSchema', schema);
       this.loadingState = 'ready';
     } catch (e) {
       this.loadingState = 'failed';
       throw e;
     }
   },
-};
+});
 </script>

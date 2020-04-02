@@ -20,26 +20,29 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { v4 as uuidv4 } from 'uuid';
-import QueryListFilterAdder from './QueryListFilterAdder.vue';
+import Vue from 'vue';
+import QueryListFilterAdder from './QueryListAddFilter.vue';
 
-export default {
+const filters: Filter[] = [];
+
+export default Vue.extend({
   name: 'QueryList',
 
   components: { QueryListFilterAdder },
 
   data: () => ({
-    filters: [],
+    filters,
     addFilterDialog: false,
   }),
 
   methods: {
-    addFilter(filter) {
+    addFilter(filter: FilterWithoutId) {
       this.filters = [...this.filters, { ...filter, id: uuidv4() }];
 
       this.addFilterDialog = false;
     },
   },
-};
+});
 </script>
