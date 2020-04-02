@@ -5,6 +5,22 @@ import vuetify from './plugins/vuetify';
 
 Vue.config.productionTip = false;
 
+const store = {
+  tables: ['individuals', 'projects', 'project_enrollments', 'demographics',
+    'biological_measurements', 'psychiatric_disorders', 'medical_history', 'markers'],
+  schema: null,
+
+  setSchemaAction(newValue) {
+    this.schema = newValue;
+  },
+};
+
+Vue.mixin(
+  {
+    data: () => ({ store }),
+  },
+);
+
 new Vue({
   router,
   vuetify,
